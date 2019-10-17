@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="sty.css"> 
+
+</head>
+<body>
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+
+	<div id="navwrapper">
+	  <div id="navbar"> <table class="tablewrapper">
+		<tr>
+		  <td class="row1" >Email or Phone</td>
+		  <td class="row1">Password</td>
+		</tr>
+		<tr>
+		  <td><input type="text" id="emaill" class="inputtext">
+		  </td>
+		  <td><input type="password" id="passwordl" class="inputtext">
+		  </td>
+		  <td><div id="button"  onclick="checklogin()">Log In</div></td> 
+		</tr>
+		<tr>
+		  <td>
+			<div class="row2"><input type="checkbox" checked>Keep me logged in</div></td>
+		  <td class="row2 h">Forgot your password?</td>
+	  </table>
+		
+		<h1 class="logowrapper">facebook Prototype</h1>
+	   
+	  </div>
+	  </div>
+	
+	  <div id="contentwrapper">
+		<div id="content">
+		  
+		  <div id="leftbod">
+			
+			<div class="connect bolder">
+			  Connect with friends and the
+			  world around you on Facebook.</div>
+			
+			<div class="leftbar">
+			  <img src="https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-xap1/t39.2365-6/851565_602269956474188_918638970_n.png" alt="" class="iconwrap fb1"/>
+			  <div class="fb1">
+				<span class="rowtext">See photos and updates</span>
+				<span class="rowtext2 fb1">from friends in News Feed</span>
+			  </div>
+			</div> 
+			  
+			  <div class="leftbar">
+			  <img src="https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-xap1/t39.2365-6/851585_216271631855613_2121533625_n.png" alt="" class="iconwrap fb1"/>
+			  <div class="fb1">
+				<span class="rowtext">Share what's new</span>
+				<span class="rowtext2 fb1">in your life on your timeline</span>
+				</div>
+			  </div>
+				 
+				<div class="leftbar">
+			  <img src="https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-xap1/t39.2365-6/851558_160351450817973_1678868765_n.png " alt="" class="iconwrap fb1"/>
+			  <div class="fb1">
+				<span class="rowtext">Find more</span>
+				<span class="rowtext2 fb1">of what you're looking for with graph search</span>
+			</div> 
+			</div> 
+		   
+				
+		  </div>
+		   
+		  <div id="rightbod">
+			<div class="signup bolder">Sign Up</div>
+			<div class="free bolder">It's free and always will be</div>
+			
+			<div class="formbox">
+		
+			<input type="email" class="inputbody in2" placeholder="Email" id="email">
+			</div>
+				<div class="formbox">
+		
+			<input type="text" class="inputbody in2" placeholder="Username" id="username">
+			</div>
+			<div class="formbox">
+			<input type="password" class="inputbody in2" placeholder="password" id="password1">
+			</div>
+			<div class="formbox">
+			<input type="password" class="inputbody in2" placeholder="Re-enter password" id="password2">
+			</div>
+		
+		
+				<div class="formbox">
+				  <div class="agree">
+					By clicking Sign Up, you agree to our <div class="link">Terms</div> and that you have read our <div class="link">Data Use Policy</div>, including our <div class="link">Cookie Use</div>.
+				  </div>  
+				</div>
+				<div class="formbox">
+				  <button type="submit"  onclick="checkPassword()" class="signbut bolder">Sign Up</button>
+				</div>
+			
+		  </div>
+		 </div>
+		</div>
+	  </body>
+ </html>
+
+
+
+ <script type="text/javascript">
+			
+
+		
+	var UserArray=[];
+	var check=0;
+	var usernamel;
+
+	function checkPassword() {  //to check the password
+		password1 =  document.getElementById('password1').value; 
+		password2 =  document.getElementById('password2').value; 
+
+		// If password not entered 
+		if (password1 == '') 
+			alert("please enter password");
+			  
+		// If confirm password not entered 
+		else if (password2 == '') 
+			alert ("Please enter confirm password"); 
+			  
+		// If Not same return False.     
+		else if (password1 != password2) { 
+			alert ("\nPassword did not match: Please try again...") 
+			return false; 
+		} 
+
+		// If same return True.
+
+	 else //if everything is fine
+	 {
+		 
+			var userdetail = {    //details of user including email, username and password
+				email: document.getElementById('email').value,
+				username: document.getElementById('username').value,
+				password1: document.getElementById('password1').value
+			}
+			if(localStorage.UserRecord){
+           UserArray1=JSON.parse(localStorage.UserRecord);
+              for(var i=0; i<UserArray1.length; i++){
+                UserArray.push(UserArray1[i]); 
+             }}  //pushing initial localstorage in an array
+
+			UserArray.push(userdetail); //adding the new detail object with the previous contents
+			console.warn('added' , {UserArray} );
+			username= document.getElementById('username').value,
+			localStorage.UserRecord=JSON.stringify(UserArray); //localstorage.UserRecord setitem 
+			localStorage.logged=JSON.stringify(username);// localstorage.logged setitem
+			console.log(localStorage.UserRecord);
+			alert("Signed in");
+			window.location.href="home.html"; //directed to home page
+
+	} 
+	
+	} //end of checkpassword() function
+
+function checklogin() //Log in button onclick
+{
+		emaill=  document.getElementById('emaill').value; 
+		passwordl =  document.getElementById('passwordl').value; 
+
+		let check=0;
+		if(localStorage.UserRecord){
+		UserArray1=JSON.parse(localStorage.UserRecord); //getitem localStorage.userrecord
+		console.log(emaill);
+		console.log(passwordl);
+		for(var i=0; i<UserArray1.length; i++)
+		{
+		  if((UserArray1[i].email==emaill) && (UserArray1[i].password1==passwordl)) //to check the user has logged in
+		{
+			 check=1; //user exist
+			 username1= UserArray1[i].username;
+			 if(check==1) // existence of user
+			 {
+				 usernamel=username1;
+			 }
+			 console.log("checked");
+		}
+		
+}
+}
+
+if(check==1) //user existing condition
+{
+alert("logged in");
+localStorage.logged=JSON.stringify(usernamel);// localstorage.logged setitem
+window.location.href="home.html"; 
+}
+else
+{
+   alert("wrong email or password");
+}
+} //end of checklogin function
+
+</script>

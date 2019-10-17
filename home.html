@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="sty.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+	<div id="navwrapper">
+		<div id="navbar"> 
+		  <h1 id="welcome" class="logowrapper"></h1>
+		</div>
+	   </div>
+		<div class="row">
+		  <div style="height: 500px;" class="col-sm-6">
+			  <table style="width:100%" id="usertable">
+			  </table>
+		  </div>  
+			   <div  style="background-color:rgb(108, 135, 194); height:  500px;" class="col-sm-6">
+				<table style="width:100%" id="home_right">
+				</table>
+			   </div> 
+		</div>
+	 </body>
+	 </html>
+  
+	 
+  
+
+
+<script>
+
+userl= JSON.parse(localStorage.logged); //getting the username of the user who logged in
+
+if(userl) // if username exist
+{
+document.getElementById("welcome").innerHTML="WELCOME "+ userl; 
+}
+else
+{
+   alert("please signup"); 
+   window.location.href="index.html"; //directing to login page
+}
+
+friend_check=0;
+home();	
+function home() // to update the home page
+ {
+    taa=`	<tr>
+            <th>Users</th>
+            <th colspan='2'>Status</th>
+            </tr>`;   // table with other user details and status(how they are related to the client)
+
+
+
+if(localStorage.UserRecord){
+UserArray1=JSON.parse(localStorage.UserRecord); // setitem userrecord from localstorage
+for(var i=0; i<UserArray1.length; i++){
+friend_check=0; 
+
+
+ if(UserArray1[i].username != JSON.parse(localStorage.logged)) // condition for not displaying the logged in users details
+ {
+
+    if(localStorage.friendRecord){  //existence for friendrecord
+    friend1=JSON.parse(localStorage.friendRecord); //getitem friendrecord from localstorage
+             for(var j=0; j<friend1.length; j++){
+
+     if(((friend1[j].from ==JSON.parse(localStorage.logged)) && (friend1[j].to ==  UserArray1[i].username) && (friend1[j].status==0)) || ((friend1[j].to ==JSON.parse(localStorage.logged)) && (friend1[j].from ==  UserArray1[i].username) && (friend1[j].status==0)) )       
+         { friend_check=1;} //condition to check if both are not friends yet and request is sent
+    if(((friend1[j].from ==JSON.parse(localStorage.logged)) && (friend1[j].to ==  UserArray1[i].username) && (friend1[j].status==1)) || ((friend1[j].to ==JSON.parse(localStorage.logged)) && (friend1[j].from ==  UserArray1[i].username) && (friend1[j].status==1)) )       
+         { friend_check=2;} // conditon to check if both are friends
+   }}
+
+    if(friend_check!=1 && friend_check!=2){  //if request is not sent
+  
+
+  
+       taa+=`	<tr>
+      <td>`+UserArray1[i].username+`</td>
+      <td><button type="submit" id="`+i+`user" onclick="frequest(`+i+`)">Add friend 
+      </button></td>
+      </tr>`; //frequest() and user id in the userrecord as argument to send the request 
+      }
+
+if(friend_check==1) //request sent condition
+{		         
+console.log(UserArray1[i].username);
+    taa+=`	<tr>
+      <td>`+UserArray1[i].username+`</td>
+      <td><button type="submit" id="`+i+`user">Request pending
+      </button></td>
+    </tr>`;
+
+
+}	
+if(friend_check==2) //both are friends condition
+{		         
+console.log(UserArray1[i].username);
+    taa+=`	<tr>
+      <td>`+UserArray1[i].username+`</td>
+      <td><button type="submit" id="`+i+`user">Friends
+      </button></td>
+    </tr>`;
+
+
+}}}}
+document.getElementById("usertable").innerHTML=taa; //displaying the table in the left
+    }
+
+home();				
+var friend=[];
+
+function frequest(x) //onclick send friend request
+{	 UserArray1=JSON.parse(localStorage.UserRecord); //getitem userrecord 
+var frienddetail = {
+        from: JSON.parse(localStorage.logged), 
+        to:UserArray1[x].username ,
+        status:0
+    } //initialling a object with detais such as from, to and status(1-request pending, 0-accepted)
+
+if(localStorage.friendRecord){  //existence of friendrecORD
+friend1=JSON.parse(localStorage.friendRecord); //getitem friendrecord
+for(var i=0; i<friend1.length; i++){
+
+
+friend.push(friend1[i]); //pushing initial localstorage of friendrecord in an array
+
+}}
+friend.push(frienddetail); // adding new details
+localStorage.friendRecord=JSON.stringify(friend); //setitem friendrecord
+
+home();
+
+}    
+var friendu=[];
+function faccept(x) //function for accepting the friend request 
+{
+
+
+if(localStorage.friendRecord){
+
+var status=1; 
+friendu=JSON.parse(localStorage.friendRecord); //getitem friendrecord
+
+
+friendu[x].status=1; //change status to 1 for the particular id x(function argument)
+localStorage.friendRecord=JSON.stringify(friendu);//update setitem friendrecord
+
+
+}
+
+
+home();
+home_right();
+
+
+}    
+function home_right() //function to show details on right notification
+{
+taar=`	<tr>
+            <th>Notification</th>
+            <th colspan='2'>Status</th>
+            </tr>`;                 //notification table
+
+
+
+if(localStorage.friendRecord){
+friend1=JSON.parse(localStorage.friendRecord);
+for(var j=0; j<friend1.length; j++){
+
+if(((friend1[j].to == JSON.parse(localStorage.logged))&&(friend1[j].status==0))) //if the user gets any request      
+{ 
+
+taar+=`<tr>
+      <td>`+friend1[j].from+`</td>
+      <td><button type="submit" id="`+j+`user" onclick="faccept(`+j+`)">Add friend
+      </button></td>
+    </tr>`; //faccept() to accept friend request and sending id of the user from the friendrecord
+
+}
+}}
+document.getElementById("home_right").innerHTML=taar;
+}
+
+home_right();
+
+
+</script>
